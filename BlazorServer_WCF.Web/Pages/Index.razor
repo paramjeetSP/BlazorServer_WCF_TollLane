@@ -1,0 +1,32 @@
+﻿@page "/"
+@page "/dashboard"
+
+<PageTitle>Dashboard | IRS</PageTitle>
+<SubIndex />
+
+<div class="wrapper-inner">
+    <div class="row mt-3">
+        <div class="col-md-5">
+            <div class="bg-grey-theme-2 cust-background">
+                <h3 class="heading-border">Top Performing Agents</h3>
+                <br class="line-border">
+                <Agents />
+            </div>
+        </div>
+        <div class="col-md-7">
+            <div class="bg-grey-theme-2 cust-background">
+                <h3 class="heading-border">Audit</h3>
+                <div class="grid-margin stretch-card">
+                    <div class="card">
+                        <div class="card-body">
+                            <Audit />
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+

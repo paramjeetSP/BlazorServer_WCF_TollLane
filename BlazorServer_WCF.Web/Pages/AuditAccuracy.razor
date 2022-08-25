@@ -1,0 +1,18 @@
+﻿<div class="container">
+    <div class="row">
+        <div class="col">
+            <RadzenChart>
+                <RadzenColumnSeries Data="@Accepts" Title="Accepts" LineType="LineType.Dashed" ValueProperty="Value" RenderingOrder="0" />
+                <RadzenColumnSeries Data="@Rejects" Title="Rejects" LineType="LineType.Dashed" ValueProperty="Value" />
+                <RadzenColumnSeries Data="@RejectCode" Title="Reject Code" LineType="LineType.Dashed" ValueProperty="Value" />
+
+                <RadzenColumnOptions Margin="50" Radius="2" />
+                <RadzenLegend Position="LegendPosition.Top" />
+                <RadzenCategoryAxis Padding="5" />
+                <RadzenValueAxis Min="90.0" Max="100.0" Step="0.5">
+                    <RadzenGridLines Visible="true" />
+                </RadzenValueAxis>
+            </RadzenChart>
+        </div>
+    </div>
+</div>

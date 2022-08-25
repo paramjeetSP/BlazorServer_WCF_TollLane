@@ -1,0 +1,34 @@
+﻿<nav class="navbar default-layout-navbar col-lg-12 col-12 p-0  d-flex flex-row">
+
+    <div class="navbar-menu-wrapper d-flex align-items-center">
+        @*<button class="navbar-toggler navbar-toggler align-self-center" type="button" data-toggle="minimize">
+        <span class="mdi mdi-menu"></span>
+        </button>*@
+        <div class="search-field d-xl-block">
+            <h2 class="text-light font-weight-bold mb-2">Image Review System</h2>
+        </div>
+        <ul class="navbar-nav navbar-nav-right flex-wrap collapse">
+            <button type="button" class="btn btn-danger btn-rounded btn-xm">FolderID: @FolderID</button>
+            <button type="button" class="btn btn-primary btn-rounded btn-xm">Image group ID: @ImageGroupID</button>
+            <button type="button" class="btn btn-warning btn-rounded btn-xm">Transation ID: @TransationID</button>
+            <button type="button" class="btn btn-success btn-rounded btn-xm">Age: @Age</button>
+            <button type="button" class="btn btn-dark btn-rounded btn-xm">Image select review: @ImageReviewer</button>
+        </ul>
+        @* <button class="navbar-toggler navbar-toggler-right d-lg-none align-self-center" type="button" data-toggle="offcanvas">
+        <span class="mdi mdi-menu"></span>
+        </button>*@
+    </div>
+</nav>
+
+@code {
+    [Parameter]
+    public string FolderID { get; set; }
+    [Parameter]
+    public string ImageGroupID { get; set; }
+    [Parameter]
+    public string TransationID { get; set; }
+    [Parameter]
+    public string Age { get; set; } 
+    [Parameter]
+    public string ImageReviewer { get; set; } 
+            }

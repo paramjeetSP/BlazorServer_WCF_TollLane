@@ -1,0 +1,211 @@
+﻿@page "/AuditDashboard"
+@inject UtilsService UtilsService
+@inject DialogService DialogService
+<PageTitle>Audit Dashboard | IRS</PageTitle>
+
+<style>
+    .rz-slider-range {
+        position: absolute;
+        top: -1px;
+        bottom: -1px;
+        left: -1px;
+        border-top-left-radius: 0.5rem;
+        border-bottom-left-radius: 0.5rem;
+        background-color: #dbdbdb;
+        border: 1px solid rgba(17, 81, 243, 0.16);
+    }
+
+    .rz-slider-handle:before {
+        content: none;
+    }
+
+    .rz-slider {
+        position: relative;
+        display: inline-block;
+        border: 1px solid #e0e1e4;
+        border-radius: 0.5rem;
+        background-color: #ffffff;
+        height: 10px;
+    }
+
+        .rz-slider:not(.rz-state-disabled) .rz-slider-handle:hover, .rz-slider:not(.rz-state-disabled) .rz-slider-handle:focus, .rz-slider:not(.rz-state-disabled) .rz-slider-handle:active {
+            background-color: #1151F3;
+            box-shadow: none;
+            border: 0.25rem solid #1151F3;
+            cursor: pointer;
+        }
+
+    .rz-slider-handle {
+        position: absolute;
+        transform: translateY(-50%);
+        top: 50%;
+        margin-left: -0.625rem;
+        background-color: #ffffff;
+        border: 0.25rem solid #1151F3;
+        border-radius: 1rem;
+        width: 1.25rem;
+        height: 1.25rem;
+        transition: background-color 0.1s 0.1s linear, color 0.1s linear, border 0.1s linear;
+    }
+</style>
+<link rel="stylesheet" href="_content/Radzen.Blazor/css/standard.css">
+
+<div class="wrapper-inner">
+    <div class="d-xl-flex justify-content-between align-items-start">
+
+        <div class="search-field d-none d-xl-block">
+            <button type="button" class="btn btn-success btn-xm" @onclick='(()=>UtilsService.NavigateTo("AuditTransaction",false))'><i class="mdi mdi-play"></i> Begin Audit</button>
+            <button type="button" class="btn btn-danger btn-xm" @onclick="(()=>Quit())"><i class="mdi mdi-stop"></i> Quit</button>
+        </div>
+    </div>
+
+    <div class="row mt-3">
+        <div class="col-md-4">
+            <div class="bg-white cust-background">
+                <h3 class="text-dark audit-heading">Audit Search Criteria  <span @onclick='(()=>ResetForm())' style="cursor:pointer;" class="cross-icon mdi mdi-close"></span> </h3>
+
+                <div class="form-criteria">
+                    <RadzenTemplateForm Data="@Search" Submit="@((TransactionSearch args) => SubmitSearch(args))">
+                        <div class="row">
+                            <RadzenFieldset>
+                                <div class="form-group row">
+                                    <label class="control-label text-dark col-sm-4" for="email">From Date:</label>
+                                    <div class="col-sm-8">
+                                        <RadzenDatePicker Value="DateTime.Now" TValue="DateTime?" Class="w-100" Name="FromDate" DateFormat="MM/dd/yyyy" />
+                                        <RadzenRequiredValidator Component="FromDate" Text="From Date is required" Popup=true Style="position: inherit" />
+                                    </div>
+                                </div>
+                                <div class="form-group row">
+                                    <label class="control-label text-dark col-sm-4" for="email">From Time:</label>
+                                    <div class="col-sm-8">
+                                        <RadzenDatePicker Value="Search.FromTime" TValue="DateTime?" ShowTime="true" TimeOnly="true" HourFormat="12" DateFormat="h:mm tt" Class="w-100" Name="FromTime" />
+                                        <RadzenRequiredValidator Component="FromTime" Text="From Time is required" Popup=true Style="position: inherit" />
+                                    </div>
+                                </div>
+                                <div class="form-group row">
+                                    <label class="control-label text-dark col-sm-4" for="email">To Date:</label>
+                                    <div class="col-sm-8">
+                                        <RadzenDatePicker Value="DateTime.Now" TValue="DateTime?" Class="w-100" Name="ToDate" DateFormat="MM/dd/yyyy" />
+                                        <RadzenRequiredValidator Component="ToDate" Text="To Date is required" Popup=true Style="position: inherit" />
+                                    </div>
+                                </div>
+                                <div class="form-group row">
+                                    <label class="control-label text-dark col-sm-4" for="email">To Time:</label>
+                                    <div class="col-sm-8">
+                                        <RadzenDatePicker Value="Search.ToTime" TValue="DateTime?" ShowTime="true" TimeOnly="true" HourFormat="12" DateFormat="h:mm tt" Class="w-100" Name="ToTime" />
+                                        <RadzenRequiredValidator Component="ToTime" Text="To Time is required" Popup=true Style="position: inherit" />
+
+                                    </div>
+                                </div>
+
+                                <div class="form-group row">
+                                    <label class="control-label text-dark col-sm-4" for="email">Reviewer Name:</label>
+                                    <div class="col-sm-8">
+                                        <RadzenDropDown AllowClear="true" @bind-Value=Search.Reviewer Placeholder="Select..." TValue="string" Name="Reviewer" Class="w-100" Data=@names />
+                                        <RadzenRequiredValidator Component="Reviewer" Text="Reviewer is required" Popup=true Style="position: inherit" />
+
+                                    </div>
+
+                                </div>
+
+                                <div class="form-group row">
+                                    <label class="control-label text-dark col-sm-4" for="email">Transaction ID:</label>
+                                    <div class="col-sm-8">
+                                        <RadzenNumeric TValue="int" Min="1" Name="TransactionID" @bind-Value=Search.TransactionId Class="w-100" Placeholder="1001" />
+                                        <RadzenRequiredValidator Component="TransactionID" Text="Disposition is required" Popup=true Style="position: inherit" />
+
+                                    </div>
+                                </div>
+
+                                <div class="form-group row">
+                                    <label class="control-label text-dark col-sm-4" for="email">Disposition Type:</label>
+                                    <div class="col-sm-8">
+                                        <RadzenDropDown AllowClear="true" @bind-Value=Search.Disposition Placeholder="Select..." TValue="string" Name="Disposition" Class="w-100" Data=@DispositionType />
+                                        <RadzenRequiredValidator Component="Disposition" Text="Disposition is required" Popup=true Style="position: inherit" />
+
+                                    </div>
+
+                                </div>
+                                <div class="form-group row">
+                                    <label class="control-label col-sm-4 text-dark " for="email">Get Transaction By:</label>
+                                    <div class="col-sm-8">
+                                        <RadzenDropDown AllowClear="true" @bind-Value=Search.Transaction Change="(()=>OnTransactionChange(Search.Transaction))" Placeholder="Select..." TValue="string" Name="Transaction" Class="w-100" Data=@(TransactionDDL) />
+                                        <RadzenRequiredValidator Component="Transaction" Text="Transaction is required" Popup=true Style="position: inherit" />
+
+                                    </div>
+                                </div>
+                                @switch (TransactionType)
+                                {
+                                    case 1:
+
+                                        <div class="form-group row">
+                                            <label class="control-label col-sm-4 text-dark " for="email">Percentage of Transaction:</label>
+                                            <div class="col-sm-8">
+                                                <div class="slidecontainer">
+                                                    <RadzenSlider @bind-Value=@SliderValue TValue="int" Style="content:auto" Min="0" Max="100" Change=@(args => OnChangeSlider(args)) Name="PercentageTransaction" Class="w-100 slider" />
+                                                    <RadzenRequiredValidator Component="PercentageTransaction" Text="Percentage is required" Popup=true Style="position: inherit" />
+                                                    <p><span id="demo">@SliderValue</span>%</p>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        break;
+                                    case 2:
+                                        <div class="form-group row">
+                                            <label class="control-label col-sm-4 text-dark " for="email">Number of Transaction:</label>
+                                            <div class="col-sm-8">
+                                                <div class="slidecontainer">
+                                                    <RadzenNumeric TValue="int" Name="NumberTransaction" Class="w-100" />
+                                                    <RadzenRequiredValidator Component="NumberTransaction" Text="Number of Transaction is required" Popup=true Style="position: inherit" />
+                                                </div>
+                                            </div>
+                                        </div>
+                                        break;
+                                    default:
+                                        break;
+                                }
+
+                                <div class="d-xl-flex justify-content-end ">
+
+                                    <div class="search-field d-none d-xl-block mt-3">
+                                        <button type="reset" @onclick='(()=>ResetForm())' class="btn btn-default btn-sm"> Cancel</button>
+                                        <button type="submit" class="btn btn-danger btn-sm"> Search</button>
+                                    </div>
+                                </div>
+                            </RadzenFieldset>
+                        </div>
+                    </RadzenTemplateForm>
+
+                </div>
+            </div>
+        </div>
+        <div class="col-md-8">
+            <Transaction TransactionData=@TransactionDatas />
+        </div>
+    </div>
+    <div class="row spacing  mt-3">
+        <div class="col-md-10 margin-auto">
+            <div class="bg-grey-theme cust-background">
+                <h3 class="text-white audit-heading">Audit Accuracy Result</h3>
+                <AuditAccuracy Data=@TransactionDatas />
+            </div>
+        </div>
+    </div>
+
+</div>
+@code {
+    async Task ShowAlert(string message)
+    {
+        var result = await DialogService.OpenAsync("Alert", ds =>
+    @<div>
+        <p class="mb-4">@message </p>
+        <div class="row">
+            <div class="col">
+                <RadzenButton Text="Ok" Click="() => ds.Close(true)" Class="mr-1" Style="width: 80px;" />
+            </div>
+        </div>
+    </div>
+    );
+    }  
+
+}
+

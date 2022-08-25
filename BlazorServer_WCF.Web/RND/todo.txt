@@ -1,0 +1,83 @@
+1.   The Start button allows you to get an available transaction. 
+
+2.   The End button ends the current process. The processed transactions if there any will be committed. It will also release the lock on the transactions that were pulled by the user but were not processed so other users can get those transactions.
+
+3.   The count current record and the total number of transactions that were pulled.
+
+4.   The FolderID of the current transaction. It is a system generated ID and used to locate the folder of the transaction.
+
+5.   The ImageGroupID of the current transaction. It is a system generated ID and used to locate the images of the transaction.
+
+6.   The TransactionID of the current transaction. It is a system generated ID or provided by the client to easily locate a specific transaction.
+
+7.   The Age of the transaction. It is the length of time based on the transaction date and the current date and time.
+
+8.   The Image Select Reviewer indicates the name of the user who processed the image select of the transaction.
+
+9.   The Image Enlargement tool. It is used to enlarge an image either by using the mouse scroll or left click on the image to open the magnifying glass tool.
+
+10.The Image Gallery where the users will select the ROI and Lane images.
+
+11.The selected Lane image from the image select process.
+
+12.The Image Control can be used to adjust the brightness, contrast, invert and grayscale of the Lane image.
+
+13.The selected ROI image from the image select process.
+
+14.The Registration field is where the user will input the plate number.
+
+15.The Jurisdiction field is where the user will input the state or jurisdiction.
+
+16.The Code Off field lets the use enter the code off value if the transaction is not readable.
+
+17.The Expiration field is where the user will input the expiration date of the plate.
+
+18.The Back button will let you return up to 5 previous transactions. The other previous transactions are already committed so the user can only return to the last 5.
+
+19.     The Next button will move to the next transaction.
+
+20.     An image for the next transaction in the queue
+
+--------------------------------------------------------------------------------------------------------
+
+
+
+1.     The total transactions loaded to the system.
+
+2.     The total transactions that can be processed on the Image Select queue.
+
+3.     The total transactions that can be processed on the Image Review queue.
+
+4.     The total transactions that can be processed on the Supervisor queue.
+
+5.   The list of top performing agents per queue for the current month.
+
+6.     Simple graph for the number of transactions committed, uncommitted and released by the user.
+
+7.   Flow chart of the transactions from where it will be started to be processed up to when it will be marked as complete.
+
+8.   GIRS3 Logo.
+
+9.   Account which GIRS is connected to.
+
+10.         Profile Picture of the user.
+
+11.         Dashboard main menu.
+
+12.         Image Select image select page.
+
+13.         Image Review image review page.
+
+14.         Supervisor review page.
+
+15.         Manifest list page.
+
+16.         State List help.
+
+17.         Code Off List help.
+
+18.         Help Tips and Hotkeys – List of keyboard shortcuts to easily perform an action using the keyboard.
+
+19.         Settings page to make some changes to the system settings.
+
+20.         Logout

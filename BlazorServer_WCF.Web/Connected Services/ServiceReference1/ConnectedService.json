@@ -1,0 +1,17 @@
+{
+  "ExtendedData": {
+    "inputs": [
+      "http://gas-iis003.globalagility.solutions/GPWS_CoreWebService/GPWS_CoreWebService.svc?wsdl"
+    ],
+    "collectionTypes": [
+      "System.Array",
+      "System.Collections.Generic.Dictionary`2"
+    ],
+    "namespaceMappings": [
+      "*, ServiceReference1"
+    ],
+    "sync": true,
+    "targetFramework": "net6.0",
+    "typeReuseMode": "Specified"
+  }
+}

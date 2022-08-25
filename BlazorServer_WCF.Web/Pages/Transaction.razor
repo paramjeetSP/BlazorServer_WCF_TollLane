@@ -1,0 +1,79 @@
+﻿@inject UtilsService UtilsService
+@inject DialogService DialogService
+
+<div class="bg-white cust-background text-dark">
+    <div class="table-records">
+        <table style="width:100%">
+            <thead>
+                <tr>
+                    <th>#</th>
+                    <th>Txn ID</th>
+                    <th>Txn Date/Time</th>
+                    <th>Plaza</th>
+                    <th>Lane</th>
+                    <th>Review Date</th>
+                    <th>Review Result</th>
+                    <th>Audit Status</th>
+                    <th>Audit Date</th>
+                    <th>Audit Result</th>
+                    <th>Auditor Name</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in TransactionData)
+                {
+                    if (item.AuditStatus == AuditDashboard.AuditStatus.Incomplete)
+                    {
+                                <tr style="cursor:pointer;" @onclick='(()=>UtilsService.NavigateTo("AuditTransaction",true))'>
+                                    <td>@(item.TxnNo)</td>
+                                    <td>@item.TransactionID</td>
+                                    <td>@item.TransactionDateTime</td>
+                                    <td>@item.Plaza</td>
+                                    <td>@item.Lane</td>
+                                    <td>@item.ReviewDate </td>
+                                    <td>@item.ReviewResult</td>
+                                    <td>@item.AuditStatus</td>
+                                    <td>@item.AuditDate </td>
+                                    <td>@item.AuditResult</td>
+                                    <td>@item.AuditorName</td>
+                                </tr>
+                    }
+                    else
+                    {
+                                <tr style="cursor:pointer;" @onclick='(()=>ShowAlert("Transaction Already Completed"))'>
+                                    <td>@(item.TxnNo)</td>
+                                    <td>@item.TransactionID</td>
+                                    <td>@item.TransactionDateTime</td>
+                                    <td>@item.Plaza</td>
+                                    <td>@item.Lane</td>
+                                    <td>@item.ReviewDate </td>
+                                    <td>@item.ReviewResult</td>
+                                    <td>@item.AuditStatus</td>
+                                    <td>@item.AuditDate </td>
+                                    <td>@item.AuditResult</td>
+                                    <td>@item.AuditorName</td>
+                                </tr>
+                    }
+                }
+            </tbody>
+
+        </table>
+    </div>
+</div>
+
+@code {
+
+    async Task ShowAlert(string message)
+    {
+        var result = await DialogService.OpenAsync("Alert", ds =>
+    @<div>
+            <p class="mb-4">@message </p>
+            <div class="row">
+                <div class="col">
+                    <RadzenButton Text="Ok" Click="() => ds.Close(true)" Class="mr-1" Style="width: 80px;" />
+                </div>
+            </div>
+    </div>
+    );
+    }
+}

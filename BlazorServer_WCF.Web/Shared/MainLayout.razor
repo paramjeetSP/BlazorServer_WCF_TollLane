@@ -1,0 +1,29 @@
+﻿@inherits LayoutComponentBase
+
+<PageTitle>IRS</PageTitle>
+<RadzenDialog />
+<RadzenTooltip />
+<RadzenNotification />
+
+<div class="sidebar" style="box-shadow: 2px 6px 6px #000">
+    <NavMenu />
+</div>
+
+<div class="main-panel">
+    <main>
+        <article class="content ">
+            <div class="content-wrapper">
+                @Body
+            </div>
+        </article>
+
+        <footer class="footer">
+            <div class="footer-inner-wraper">
+                <div class="d-sm-flex justify-content-center justify-content-sm-between">
+                    <span class="d-block text-center text-sm-left d-sm-inline-block">Copyright © Global Agility</span>
+                    <span class="float-none float-sm-right d-block mt-1 mt-sm-0 text-center"> from Softprodigy PVT Limited</span>
+                </div>
+            </div>
+        </footer>
+    </main>
+</div>

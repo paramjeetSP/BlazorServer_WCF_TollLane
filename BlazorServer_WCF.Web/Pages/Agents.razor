@@ -1,0 +1,45 @@
+﻿<div class="image-review">
+    <h4>Image Select</h4>
+    <div class="row">
+        @foreach (var item in ImageSelect)
+        {
+            <div class="col-md-6 col-6 col-xl-3">
+                <div class="user-section">
+                    <img src="@item.Image">
+                    <h4>@item.Name</h4>
+                    <p class="price">@FormatAsUSD(item.Price)</p>
+                </div>
+            </div>
+        }
+    </div>
+</div>
+<div class="image-review">
+    <h4>Image review</h4>
+    <div class="row">
+        @foreach (var item in Imagereview)
+        {
+            <div class="col-md-6 col-6 col-xl-3">
+                <div class="user-section">
+                    <img src="@item.Image">
+                    <h4>@item.Name</h4>
+                    <p class="price">@FormatAsUSD(item.Price)</p>
+                </div>
+            </div>
+        }
+    </div>
+</div>
+<div class="image-review">
+    <h4>Supervisor</h4>
+    <div class="row">
+        @foreach (var item in Supervisor)
+        {
+            <div class="col-md-6  col-6 col-xl-3">
+                <div class="user-section">
+                    <img src="@item.Image">
+                    <h4>@item.Name</h4>
+                    <p class="price">@FormatAsUSD(item.Price)</p>
+                </div>
+            </div>
+        }
+    </div>
+</div>

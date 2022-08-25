@@ -1,0 +1,256 @@
+﻿@page "/ImageReview"
+
+@inject ImageReviewService Service
+@inject DialogService DialogService
+@inject NavigationManager NavigationManager
+@inject ServiceReference1.GPWS_CoreWebServiceClient CoreService
+@inject TooltipService TooltipService
+@implements IDisposable
+@using Toolbelt.Blazor.HotKeys 
+@inject HotKeys HotKeys 
+@inject NotificationService NotificationService
+@inject UtilsService UtilsService
+
+
+<PageTitle>Image Review | IRS</PageTitle>
+
+<SubImageReview FolderID=@FolderID Age=@Age ImageGroupID="@ImageGroupID" ImageReviewer="@ImageReviewer" TransationID="@TransationID" />
+
+<style>
+.mfp-img {
+ cursor: pointer; 
+}
+.mfp-force-scrollbars {
+  &.mfp-wrap {
+      overflow-y: auto !important;
+      overflow-x: auto !important;
+  }
+  .mfp-img {
+    max-width: none;
+  }
+  .mfp-close {
+   position: fixed;
+  }
+
+</style>
+
+
+<div class="wrapper-inner">
+         <div class="d-xl-flex justify-content-between align-items-start" >
+
+        <div class="search-field d-none d-xl-block">
+            <button type="button" class="btn btn-success btn-xm" disabled='@(_Utils.isNextDisabled ? false : true)' @onclick="(()=>BeginTransaction())"><i class="mdi mdi-play"></i> Start</button>
+            <button type="button" class="btn btn-danger btn-xm" disabled=@_Utils.isNextDisabled @onclick="(()=>EndTransaction())"><i class="mdi mdi-stop"></i> End</button>
+
+            <button type="button" class="btn btn-success btn-rounded  btn-xm">Records 1/200</button>
+        </div>
+        <div class="d-sm-flex justify-content-xl-between align-items-center zooming">
+            <div class="btn-group " role="group" aria-label="Basic example">
+                <span>Zoom Scroll</span>&nbsp;
+                 <RadzenSwitch @bind-Value=@_Utils.isMagnifier id="zoom-magnifierSwitch" disabled=@_Utils.isNextDisabled Change=@(args => OnMagnifierSwitchChange(args)) />
+               &nbsp; <span>Magnifier</span>
+            </div>
+        </div>
+    </div>
+
+    <div class="row spacing mt-1 mb-3" >
+        <div class="col-md-6 col-12 col-xl-4">
+            <div class="bg-grey-theme cust-background">
+                <h3>Image Gallery</h3>
+                <ul class="d-flex flex-wrap image-gallery">
+                    @if (objTransaction != null)
+                    {
+                        @if (objTransaction.Images != null)
+                        {
+                            @foreach (var item in objTransaction.Images)
+                            {
+                                <li>
+                                    <img src="@GetImagePath(item)" ImageSrc="@GetImagePath(item)" @onclick='(()=>SelectImage(GetImagePath(item),item.ID))' style="cursor:pointer;" class="img-fluid">
+                                </li>
+                            }
+                        }
+                    }
+                </ul> 
+            </div>
+        </div>
+        <div class="col-md-6  col-12 col-xl-6">
+            <div class="bg-grey-theme cust-background">
+                <ul class="d-flex flex-wrap single-gallery">
+                    <li>
+                        @if (@_Utils.isNextDisabled)
+                        {
+                            <img src="@_Utils.PrimarySrc" id="myimage" 
+                            style="@(_Utils.css)" title="Image not available" class="img-fluid " /> 
+                        }else
+                        {                         
+                        <a href="@_Utils.PrimarySrc" id="PrimaryImageLink" class="with-caption image-link" 
+                        title="Double click on image to enlarge/reduce it">
+                            <img src="@_Utils.PrimarySrc" id="myimage" 
+                            style="@(_Utils.css) cursor:pointer;" class="img-fluid " />   
+                        </a>
+                               
+                        }
+                    </li>
+                </ul> 
+            </div>
+        </div>
+
+        <div class="col-md-12  col-12 col-xl-2" id="">
+            <div class="bg-grey-theme cust-background image-filter" id="image-filter">
+                <div class="columns">
+                    <div class="column">
+                        <p>Brightness <span class="filter-value">@_Utils.brightness</span>% 
+                             <RadzenIcon style="cursor:pointer" MouseEnter=@(args => ShowImageTooltip(args,(int)Filter.brightness,
+                                 new TooltipOptions(){ Style = "background-color: #ffffca; color:#000", Duration = null })) class="mr-2 float-right" IconStyle="IconStyle.Info" Icon="info" MouseLeave="((args)=>ShowImageTooltip(args,0,null))" />
+                            </p>
+                        <input id="brightness" disabled="@_Utils.isNextDisabled" name="brightness" @ref=BrightnessRef @bind-value="_Utils.brightness" @onchange="(args => ChangeFilter(args.Value.ToString(),(int)Filter.brightness))" @bind-value:event="oninput" class="control" type="range" min="0" max="500">
+                    </div>
+
+                <div class="column">
+                    <p>Contrast <span class="filter-value">@_Utils.contrast</span>%
+                     <RadzenIcon style="cursor:pointer" MouseEnter=@(args => ShowImageTooltip(args,(int)Filter.contrast,
+                                 new TooltipOptions(){ Style = "background-color: #ffffca; color:#000", Duration = null })) class="mr-2 float-right" IconStyle="IconStyle.Info" Icon="info" MouseLeave="((args)=>ShowImageTooltip(args,0,null))"  />    
+                    </p>
+                    <input id="contrast" name="contrast" disabled="@_Utils.isNextDisabled" @ref=ContrastRef  @bind-value="_Utils.contrast" @onchange="(args => ChangeFilter(args.Value.ToString(),(int)Filter.contrast))"  @bind-value:event="oninput" class="control" type="range" min="0" max="300" >
+                </div>​
+                </div>
+                    <div class="columns">
+                        <div class="column">
+                            <p>Grayscale <span class="filter-value">@_Utils.grayscale</span>%
+                                 <RadzenIcon style="cursor:pointer" MouseEnter=@(args => ShowImageTooltip(args,(int)Filter.grayscale,
+                                 new TooltipOptions(){ Style = "background-color: #ffffca; color:#000", Duration = null })) class="mr-2 float-right" IconStyle="IconStyle.Info" Icon="info" MouseLeave="((args)=>ShowImageTooltip(args,0,null))"  />
+                            </p>
+                            <input id="grayscale" disabled="@_Utils.isNextDisabled" name="grayscale" @ref=GrayscaleRef  @bind-value="_Utils.grayscale" @onchange="(args => ChangeFilter(args.Value.ToString(),(int)Filter.grayscale))"  @bind-value:event="oninput" class="control" type="range" min="0" max="100" >
+                        </div>
+
+                        <div class="column">
+                            <p>Invert <span class="filter-value">@_Utils.invert</span>%
+                             <RadzenIcon style="cursor:pointer" MouseEnter=@(args => ShowImageTooltip(args,(int)Filter.invert,
+                                 new TooltipOptions(){ Style = "background-color: #ffffca; color:#000", Duration = null })) class="mr-2 float-right" IconStyle="IconStyle.Info" Icon="info" MouseLeave="((args)=>ShowImageTooltip(args,0,null))" />    
+                            </p>
+                            <input id="invert" disabled="@_Utils.isNextDisabled" name="invert" class="control" @ref=InvertRef  @bind-value="_Utils.invert" @onchange="(args => ChangeFilter(args.Value.ToString(),(int)Filter.invert))"  @bind-value:event="oninput" type="range" min="0" max="100" >
+                        </div>​
+
+                        <div class="column">
+                            <button type="button" disabled="@_Utils.isNextDisabled" class="btn btn-sm btn-primary" @onclick="(args => Reset())" ><i class="fa-solid fa-arrow-rotate-right"></i>&nbsp; Reset</button>
+                        </div>​
+                    </div>
+            </div>
+           
+        </div>
+    </div>
+
+    <div class="row spacing  mt-1 mb-3">
+        <div class="col-md-4">
+            <div class="bg-grey-theme cust-background">
+                <div class="ROI">
+                    <img src="@_Utils.LOI" style="@_Utils.css" class="wd-100 img-fluid">
+                </div>
+            </div> 
+        </div>
+        <div class="col-md-4">
+            <div class="bg-grey-theme cust-background">
+
+               @*<ImageReviewForm isNextDisabled=@_Utils.isNextDisabled  isPrevDisabled=@_Utils.isNextDisabled />*@
+
+               <RadzenTemplateForm Data="@FormData" Submit="@((ImageReviewFormData args)=>Submit(args))">
+    <div class="row img-review-form">
+        <RadzenFieldset>
+            <div class="d-sm-flex justify-content-xl-between align-items-center mb-2">
+                <div class="btn-group p-3" role="group" aria-label="Basic example">
+                    <h4 class="card-title">Image Review</h4>
+                </div>
+                <div class="btn-row">
+                    @*<button type="submit" disabled="@_Utils.isNextDisabled" class="btn btn-warning btn-xm"> Back <span class="red-icon">0/5</span></button>*@
+                    <button type="submit" disabled="@_Utils.isNextDisabled" class="btn btn-danger btn-xm"> Next</button>
+                </div>
+            </div>
+
+            <div class="row mb-5">
+                <div class="col-md-3 align-items-center d-flex">
+                    <RadzenLabel Text="Registration" />
+                </div>
+                <div class="col-md-9">
+                    <RadzenTextBox Class="w-100 form-control-lg" Change="(()=>ReviewFormValidation(FormData.Registration,FormData.CodeOff))" AutoComplete="false" Style="display: block" @bind-Value=FormData.Registration Placeholder="@registrationPlaceholder" Name="Registration" />
+                    @if (!isRegistrationOptional)
+                    {
+                        <RadzenRequiredValidator Component="Registration" Text="Registration is required" Popup=true Style="position: absolute" />
+                    }
+
+                </div>
+            </div>
+            <div class="row mb-5">
+                <div class="col-md-3 align-items-center d-flex">
+                    <RadzenLabel Text="Jurisdiction" />
+                </div>
+                <div class="col-md-9">
+                    <RadzenTextBox Class="w-100 form-control-lg" MaxLength="2" Change="((args)=>CheckJurisdiction(FormData.Jurisdiction))" AutoComplete="false" Style="display: block" @bind-Value=FormData.Jurisdiction Placeholder="Jurisdiction" Name="Jurisdiction" />
+                    <RadzenRequiredValidator Component="Jurisdiction" Text="Jurisdiction is required" Popup=true Style="position: absolute" />
+                    <RadzenLabel Text="@successPlaceholder" class="@successBSClass" Visible=@FormData.IsJSuccess />
+                    <RadzenCompareValidator Visible=FormData.IsJError Component="Jurisdiction" Text="" />
+
+                </div>
+            </div>
+            <div class="row mb-5">
+                <div class="col-md-3 align-items-center d-flex">
+                    <RadzenLabel Text="Code Off" />
+                </div>
+                <div class="col-md-9">
+                    <RadzenTextBox Class="w-100 form-control-lg" Change="(()=>ReviewFormValidation(FormData.Registration,FormData.CodeOff))" Style="display: block" @bind-Value=FormData.CodeOff Placeholder="@codeOffPlaceholder" Name="CodeOff" />
+                    @if (!isCodeOffOptional)
+                    {
+                        <RadzenRequiredValidator Component="CodeOff" Text="Code Off is required" Popup=true Style="position: absolute" />
+                    }
+                </div>
+            </div>
+            @* <div class="row mb-5">
+                <div class="col-md-3 align-items-center d-flex">
+                <RadzenLabel Text="Expiration Date" />
+                </div>
+                <div class="col-md-9">
+                <RadzenDatePicker @bind-Value=FormData.ExpDate TValue="DateTime?" Class="w-100" Name="ExpDate" Placeholder="MM/DD/YYYY" DateFormat="MM/dd/yyyy" />
+                <RadzenRequiredValidator Component="ExpDate" Text="Expiration Date is required" Popup=true Style="position: inherit" />
+                </div>
+                </div>*@
+        </RadzenFieldset>
+    </div>
+</RadzenTemplateForm>
+
+            </div> 
+        </div>
+        <div class="col-md-4">
+            <div class="bg-grey-theme cust-background">
+                <div class="next-image">
+                    <img src="@_Utils.ROI"  style="@_Utils.css" class="img-fluid wd-100">                  
+                </div>
+            </div>
+        </div>
+        </div>
+</div>
+
+
+@code {
+
+    private void BusyDialog() => DialogService.Open("", ds =>
+        @<div> 
+        <div class="row">
+            <div class="col text-center p-5">
+                <b>Loading, please wait...</b>
+            </div>
+        </div>
+    </div>
+    , new DialogOptions() { ShowTitle = false, Style = "min-height:auto;min-width:auto;width:auto", CloseDialogOnEsc = false });
+
+     async Task ShowAlert(string message)
+    {
+        var result = await DialogService.OpenAsync("Alert", ds =>
+    @<div>
+        <p class="mb-4">@message </p>
+        <div class="row">
+            <div class="col">
+                <RadzenButton Text="Ok" Click="() => ds.Close(true)" Class="mr-1" Style="width: 80px;" />
+            </div>
+        </div>
+    </div>);
+    }
+}

@@ -1,0 +1,161 @@
+﻿@page "/AuditTransaction"
+@page "/AuditTransaction/{rec}"
+
+@inject ImageReview ImageReview
+@inject DialogService DialogService
+
+<PageTitle>Audit Transaction | IRS</PageTitle>
+
+<button type="button" class="btn btn-primary btn-rounded btn-xm">Records @(string.IsNullOrEmpty(rec)? "1 / 6" : rec + " / 1")</button>
+<div class="wrapper-inner">
+    <div class="row mt-3">
+        <div class="col-md-4">
+            <div class="bg-grey-theme-2 cust-background">
+                <h3 class="heading-border text-white">Image Gallery </h3>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="bg-grey-theme-2 cust-background">
+                <div class="image-preview">
+                    <img src="../../images/image-preview.jpg" class="img-fluid">
+                </div>
+            </div>
+        </div>
+        <div class="col-md-2">
+            <div class="bg-grey-theme-2 cust-background image-filter">
+                <h3 class="heading-border text-white">Image Controls</h3>
+                  <div class="columns">
+                    <div class="column">
+                        <p>Brightness <span class="filter-value">@ImageReview._Utils.brightness</span>%</p>
+                        <input id="brightness" name="brightness" @bind-value="ImageReview._Utils.brightness" @onchange="(args => ImageReview.ChangeFilter(args.Value.ToString(),(int)Filter.brightness))" @bind-value:event="oninput" class="control" type="range" min="0" max="500">
+                    </div>
+        
+                <div class="column">
+                    <p>Contrast <span class="filter-value">@ImageReview._Utils.contrast</span>%</p>
+                    <input id="contrast" name="contrast"  @bind-value="ImageReview._Utils.contrast" @onchange="(args =>ImageReview.ChangeFilter(args.Value.ToString(),(int)Filter.contrast))"  @bind-value:event="oninput" class="control" type="range" min="0" max="300" >
+                </div>​
+                </div>
+                    <div class="columns">
+                        <div class="column">
+                            <p>Grayscale <span class="filter-value">@ImageReview._Utils.grayscale</span>%</p>
+                            <input id="grayscale" name="grayscale"  @bind-value="ImageReview._Utils.grayscale" @onchange="(args =>ImageReview.ChangeFilter(args.Value.ToString(),(int)Filter.grayscale))"  @bind-value:event="oninput" class="control" type="range" min="0" max="100" >
+                        </div>
+                        
+                        <div class="column">
+                            <p>Invert <span class="filter-value">@ImageReview._Utils.invert</span>%</p>
+                            <input id="invert" name="invert" class="control"  @bind-value="ImageReview._Utils.invert" @onchange="(args => ImageReview.ChangeFilter(args.Value.ToString(),(int)Filter.invert))"  @bind-value:event="oninput" type="range" min="0" max="100" >
+                        </div>​
+
+                        <div class="column">
+                            <button type="button" class="btn btn-sm btn-primary" @onclick="(args => ImageReview.Reset())" ><i class="fa-solid fa-arrow-rotate-right"></i>&nbsp; Reset</button>
+                        </div>​
+                    </div>
+            </div>
+        </div>
+    </div>
+    <div class="row mt-3">
+        <div class="col-md-4">
+            <div class="bg-grey-theme-2 cust-background">
+                <h3 class="heading-border text-white">ROI </h3>
+                <div class="no-image text-center">
+                    <img src="../../images/no-mage.jpg" class="img-fluid"></div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="bg-grey-theme-2 cust-background">
+                <div class="records-IDS">
+                    <p>Transactions Details</p>
+                    <table style="width:100%">
+                        <tr>
+                            <td rowspan="4">Txn ID: 	86051748</td>
+                            <td>Reviewer 1</td>
+                            <td>Jsmith</td>
+                        </tr>
+                        <tr>
+                            <td>Plate:</td>
+                            <td class="text-yellow">ABCDD</td>
+                        </tr>
+                        <tr>
+                            <td>State:</td>
+                            <td class="text-yellow">CA</td>
+                        </tr>
+                        <tr>
+                            <td>Code Off:</td>
+                            <td class="text-yellow">ABCDD</td>
+                        </tr>
+                        <tr>
+                            <td rowspan="4">Date/Time: 04/19/2022 12:17</td>
+                            <td>Reviewer 2</td>
+                            <td>Jsmith</td>
+                        </tr>
+                        <tr>
+                            <td>Plate:</td>
+                            <td class="text-yellow">ABCDD</td>
+                        </tr>
+                        <tr>
+                            <td>State:</td>
+                            <td class="text-yellow">CA</td>
+                        </tr>
+                        <tr>
+                            <td>Code Off:</td>
+                            <td class="text-yellow">ABCDD</td>
+                        </tr>
+                        <tr>
+                            <td rowspan="2">Plazza: Woodrow</td>
+                            <td>Reviewer 3</td>
+                            <td>Jsmith</td>
+                        </tr>
+                        <tr>
+                            <td>Plate:</td>
+                            <td class="text-yellow">ABCDD</td>
+                        </tr>
+                        <tr>
+                            <td rowspan="2">Lane: 3</td>
+                            <td>State:</td>
+                            <td class="text-yellow">CA</td>
+                        </tr>
+                        <tr>
+                            <td>Code Off:</td>
+                            <td class="text-yellow">ABCDD</td>
+                        </tr>
+
+                    </table>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="bg-grey-theme-2 cust-background">
+                <h3 class="heading-border text-white">Audit Review</h3>
+                <div class="row correct-toggle" style="align-items: center;">
+                    <label for="exampleInputEmail2" class="col-sm-5 col-md-3 col-5 col-form-label">Wrong code  </label>
+                    <label for="exampleInputEmail2" class="col-sm-2 col-md-1 col-2 col-form-label" style="margin-top: -12px;">
+                        <input type="checkbox" class="form-check-input">
+                    </label>
+                    <div class="col-sm-8">
+                        <span>Correct</span><!-- Default switch -->
+                        <div class="custom-control custom-switch">
+                          <input type="checkbox" class="custom-control-input" id="customSwitches">
+                          <label class="custom-control-label" for="customSwitches">Incorrect</label>
+                        </div> <span></span>
+                    </div>
+                </div>
+                <div class="row mt-3">
+                    <div class="col-md-12 col-12 col-sm-12 col-xl-8 margin-auto">
+                        <div class="form-group text-center">
+                            <label for="comment" class="">Comment:</label>
+                            <textarea class="form-control" rows="5" id="comment"></textarea>
+                        </div>
+                    </div>
+                </div>
+                <div class="text-right">
+                    <button type="button" class="btn btn-info-2   btn-xm"> Next</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@code {
+    [Parameter]
+    public string rec { get; set; }
+}

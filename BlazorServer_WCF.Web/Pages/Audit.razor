@@ -1,0 +1,19 @@
+﻿<div class="container">
+    <div class="row">
+        <div class="col">
+            <RadzenChart>
+                <RadzenAreaSeries Smooth="@smooth" Data="@Commited" CategoryProperty="Date" Title="Commited" Fill="#459e5e" LineType="LineType.Dashed" ValueProperty="Revenue" RenderingOrder="2">
+                </RadzenAreaSeries>
+                <RadzenAreaSeries Smooth="@smooth" Data="@Uncommited" CategoryProperty="Date" Title="Uncommited" Fill="#b94d5a" LineType="LineType.Dashed" ValueProperty="Revenue">
+                </RadzenAreaSeries>
+                <RadzenAreaSeries Smooth="@smooth" Data="@Realesed" CategoryProperty="Date" Title="Realesed" Fill="#e6b417" LineType="LineType.Dashed" ValueProperty="Revenue">
+                </RadzenAreaSeries>
+                <RadzenLegend Position="LegendPosition.Top" />
+                <RadzenCategoryAxis Padding="20" FormatString="{0:dd/MM/yyyy}" />
+                <RadzenValueAxis>
+                    <RadzenGridLines Visible="true" />
+                </RadzenValueAxis>
+            </RadzenChart>
+        </div>
+    </div>
+</div>
